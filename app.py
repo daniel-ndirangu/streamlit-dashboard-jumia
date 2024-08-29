@@ -4,13 +4,13 @@ import streamlit as st
 import pandas as pd
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
-# from config import URI
+from config import URI
 import plotly.express as px
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 from streamlit_autorefresh import st_autorefresh
 
-URI = st.secrets["MONGO_URI"]
+# URI = st.secrets["MONGO_URI"]
 
 
 # Connect to the Mongo atlas
@@ -63,24 +63,44 @@ df = load_data(collection)
 # Call function to get price difference
 new_df = get_price_difference(df)
 
+# Custom CSS for better mobile experience
+st.markdown("""
+<style>
+    .reportview-container .main .block-container {
+        max-width: 95%;
+        padding-top: 5rem;
+        padding-right: 1rem;
+        padding-left: 1rem;
+        padding-bottom: 5rem;
+    }
+    .stButton>button {
+        width: 100%;
+    }
+</style>
+""", unsafe_allow_html=True)
+
 
 # Set page layout
-st.set_page_config(page_title="My App", page_icon=":chart_with_upwards_trend:", layout="wide")
+# st.set_page_config(page_title="My App", page_icon=":chart_with_upwards_trend:", layout="centered", initial_sidebar_state="collapsed")
 
 # Define the title 
 st.title("📱 Jumia Samsung Price Tracker")
 
+st.sidebar.title("About")
+st.sidebar.info("This app tracks the prices of Samsung products in their official jumia store and identifies discounts between scraping runs.")
+st.sidebar.markdown("### Connect with me")
+st.sidebar.markdown("[![LinkedIn](https://img.shields.io/badge/linkedin-%230077B5.svg?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/nderitu-ndirangu-60442b2b7/)")
+
 # Define product list
 st.write("## Product list")
 
-refresh = st.checkbox("Enable auto-refresh")
+# refresh = st.checkbox("Enable auto-refresh")
 
-if refresh:
-    st_autorefresh(interval=4200000, key="conditionalrefresh")
+# if refresh:
+#     st_autorefresh(interval=4200000, key="conditionalrefresh")
 
 new_df_sorted = new_df[["Updated_at", "Product", "Price", "Price_change" ]].sort_values(by=["Updated_at", "Price_change"], ascending=False).reset_index(drop=True)
 
-# st.dataframe(new_df[["Updated_at", "Product", "Price", "Price_change" ]].sort_values(by=["Updated_at", "Price_change"], ascending=False), width=3000).reset_index(drop=True)
 
 # Define the dataframe
 st.dataframe(new_df_sorted, width=3000)
@@ -88,10 +108,11 @@ st.dataframe(new_df_sorted, width=3000)
 # Define items in  the selectbox
 product_name = st.selectbox("🔍 Select product to view price history", new_df["Product"].unique())
 
+# Show Current price & Change
 st.metric(label=product_name, 
           value=f""" Ksh {new_df.loc[new_df["Product"] == product_name]["Price"].values[0]:,.0f}""", 
           delta=f"price change {round(new_df.loc[new_df["Product"] == product_name]["Price_change"].values[0])}%",
-          delta_color="normal",
+          delta_color="off",
           label_visibility="hidden")
 
 # Filter data for the selected product
@@ -104,7 +125,7 @@ fig = px.line(product_df, x="timestamp", y="current_price")#, markers=True
 fig.update_layout(xaxis_title="Time",
                   yaxis_title="Price", yaxis=dict(tickformat=",.0f"))
 
-st.plotly_chart(fig)
+st.plotly_chart(fig, use_container_width=True)
 
 
 
