@@ -12,7 +12,7 @@ from streamlit_autorefresh import st_autorefresh
 
 
 # Connect to the Mongo atlas
-client = MongoClient(URI, server_api=ServerApi("1"))
+client = MongoClient(URI, server_api=ServerApi("1"), tls=True, tlsAllowInvalidCertificates=True,  connectTimeoutMS=60000 )
 
 #Select the database
 db = client["ecommerce_db"]
@@ -66,15 +66,15 @@ new_df = get_price_difference(df)
 st.set_page_config(page_title="My App", page_icon=":chart_with_upwards_trend:", layout="wide")
 
 # Define the title 
-st.title("📱 Samsung Price Tracker")
+st.title("📱 Jumia Samsung Price Tracker")
 
 # Define product list
 st.write("## Product list")
 
-# refresh = st.checkbox("Enable auto-refresh")
+refresh = st.checkbox("Enable auto-refresh")
 
-# if refresh:
-#     st_autorefresh(interval=4200000, key="conditionalrefresh")
+if refresh:
+    st_autorefresh(interval=4200000, key="conditionalrefresh")
 
 new_df_sorted = new_df[["Updated_at", "Product", "Price", "Price_change" ]].sort_values(by=["Updated_at", "Price_change"], ascending=False).reset_index(drop=True)
 
@@ -97,7 +97,7 @@ product_df = df.loc[df["product"] == product_name].sort_values(by="timestamp")
 
 # Plot line chart using plotly
 st.subheader(f"📈 Price History of {product_name}", divider="rainbow")
-fig = px.line(product_df, x="timestamp", y="current_price", markers=True)
+fig = px.line(product_df, x="timestamp", y="current_price")#, markers=True
 fig.update_layout(xaxis_title="Time",
                   yaxis_title="Price")
 
