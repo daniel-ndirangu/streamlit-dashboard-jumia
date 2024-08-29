@@ -97,11 +97,12 @@ st.metric(label=product_name,
 # Filter data for the selected product
 product_df = df.loc[df["product"] == product_name].sort_values(by="timestamp")
 
+
 # Plot line chart using plotly
 st.subheader(f"📈 Price History of {product_name}", divider="rainbow")
 fig = px.line(product_df, x="timestamp", y="current_price")#, markers=True
 fig.update_layout(xaxis_title="Time",
-                  yaxis_title="Price")
+                  yaxis_title="Price", yaxis=dict(tickformat=",.0f"))
 
 st.plotly_chart(fig)
 
