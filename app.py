@@ -54,38 +54,42 @@ def get_price_difference(df):
     return comparison_df
 
 
-
+# Load the data
 df = load_data(collection)
 
 
+# Call function to get price difference
 new_df = get_price_difference(df)
 
 
+# Set page layout
 st.set_page_config(page_title="My App", page_icon=":chart_with_upwards_trend:", layout="wide")
 
 # Define the title 
 st.title("📱 Samsung Price Tracker")
 
+# Define product list
 st.write("## Product list")
 
-refresh = st.checkbox("Enable auto-refresh")
+# refresh = st.checkbox("Enable auto-refresh")
 
-if refresh:
-    st_autorefresh(interval=4200000, key="conditionalrefresh")
+# if refresh:
+#     st_autorefresh(interval=4200000, key="conditionalrefresh")
 
 new_df_sorted = new_df[["Updated_at", "Product", "Price", "Price_change" ]].sort_values(by=["Updated_at", "Price_change"], ascending=False).reset_index(drop=True)
 
 # st.dataframe(new_df[["Updated_at", "Product", "Price", "Price_change" ]].sort_values(by=["Updated_at", "Price_change"], ascending=False), width=3000).reset_index(drop=True)
 
+# Define the dataframe
 st.dataframe(new_df_sorted, width=3000)
 
-# Define the in the selectbox
+# Define items in  the selectbox
 product_name = st.selectbox("🔍 Select product to view price history", new_df["Product"].unique())
 
 st.metric(label=product_name, 
           value=f""" Ksh {new_df.loc[new_df["Product"] == product_name]["Price"].values[0]:,.0f}""", 
           delta=f"price change {round(new_df.loc[new_df["Product"] == product_name]["Price_change"].values[0])}%",
-          delta_color="off",
+          delta_color="normal",
           label_visibility="hidden")
 
 # Filter data for the selected product
