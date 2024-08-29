@@ -4,13 +4,13 @@ import streamlit as st
 import pandas as pd
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
-from config import URI
+# from config import URI
 import plotly.express as px
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 from streamlit_autorefresh import st_autorefresh
 
-# URI = st.secrets["MONGO_URI"]
+URI = st.secrets["MONGO_URI"]
 
 
 # Connect to the Mongo atlas
