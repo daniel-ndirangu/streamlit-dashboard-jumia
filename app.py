@@ -63,25 +63,26 @@ df = load_data(collection)
 # Call function to get price difference
 new_df = get_price_difference(df)
 
-# Custom CSS for better mobile experience
-st.markdown("""
-<style>
-    .reportview-container .main .block-container {
-        max-width: 95%;
-        padding-top: 5rem;
-        padding-right: 1rem;
-        padding-left: 1rem;
-        padding-bottom: 5rem;
-    }
-    .stButton>button {
-        width: 100%;
-    }
-</style>
-""", unsafe_allow_html=True)
+
+# # Custom CSS for better mobile experience
+# st.markdown("""
+# <style>
+#     .reportview-container .main .block-container {
+#         max-width: 95%;
+#         padding-top: 5rem;
+#         padding-right: 1rem;
+#         padding-left: 1rem;
+#         padding-bottom: 5rem;
+#     }
+#     .stButton>button {
+#         width: 100%;
+#     }
+# </style>
+# """, unsafe_allow_html=True)
 
 
 # Set page layout
-# st.set_page_config(page_title="My App", page_icon=":chart_with_upwards_trend:", layout="centered", initial_sidebar_state="collapsed")
+st.set_page_config(page_title="My App", page_icon=":chart_with_upwards_trend:", layout="wide", initial_sidebar_state="collapsed")
 
 # Define the title 
 st.title("📱 Jumia Samsung Price Tracker")
